@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/adamchuan/newBlog#readme",
   "dependencies": {
+    "markdown": "^0.5.0",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-redux": "^4.4.1",
@@ -37,11 +38,14 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.2.0",
     "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
+    "gulp-webpack": "^1.5.0",
     "postcss-loader": "^0.8.2",
     "redux-devtools": "^3.2.0",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
   },
   "eslintConfig": {
     "env": {

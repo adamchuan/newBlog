@@ -1,70 +1,138 @@
-var gulp         = require("gulp");
-var browserSync  = require("browser-sync").create();
-var compass      = require("gulp-compass");
-var uglify       = require("gulp-uglify");
-var rename       = require("gulp-rename");
+var gulp = require("gulp");
+var gutil = require("gulp-util");
+var browserSync = require("browser-sync").create();
+var compass = require("gulp-compass");
+var uglify = require("gulp-uglify");
+var rename = require("gulp-rename");
 var autoprefixer = require("gulp-autoprefixer");
-gulp.task("server",function(){
+var webpack = require("webpack");
+var WebpackDevServer = require("webpack-dev-server");
+var webpackConfig = require("./webpack.config.js");
 
-    browserSync.init({
-        server : {
-            baseDir : "./"
-        }
+gulp.task("default", ["webpack-dev-server"]);
+
+// Build and watch cycle (another option for development)
+// Advantage: No server required, can run app from filesystem
+// Disadvantage: Requests are not blocked until bundle is available,
+//               can serve an old app on refresh
+gulp.task("build-dev", ["webpack:build-dev"], function() {
+    gulp.watch(["./**"], ["webpack:build-dev"]);
+});
+
+// Production build
+gulp.task("build", ["webpack:build"]);
+
+gulp.task("webpack:build", function(callback) {
+    // modify some webpack config options
+    var myConfig = Object.create(webpackConfig);
+    myConfig.plugins = myConfig.plugins.concat(
+        new webpack.DefinePlugin({
+            "process.env": {
+                // This has effect on the react lib size
+                "NODE_ENV": JSON.stringify("production")
+            }
+        }),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.UglifyJsPlugin()
+    );
+
+    // run webpack
+    webpack(myConfig, function(err, stats) {
+        if (err) throw new gutil.PluginError("webpack:build", err);
+        gutil.log("[webpack:build]", stats.toString({
+            colors: true
+        }));
+        callback();
     });
-
 });
 
-gulp.task("html",["server"],function(){
+// modify some webpack config options
+var myDevConfig = Object.create(webpackConfig);
+myDevConfig.devtool = "sourcemap";
+myDevConfig.debug = true;
 
-    gulp.watch("./*.html",browserSync.reload);
+// create a single instance of the compiler to allow caching
+var devCompiler = webpack(myDevConfig);
 
+gulp.task("webpack:build-dev", function(callback) {
+    // run webpack
+    devCompiler.run(function(err, stats) {
+        if (err) throw new gutil.PluginError("webpack:build-dev", err);
+        gutil.log("[webpack:build-dev]", stats.toString({
+            colors: true
+        }));
+        callback();
+    });
 });
 
+gulp.task("webpack-dev-server", function(callback) {
+    // modify some webpack config options
+    var myConfig = Object.create(webpackConfig);
+    myConfig.devtool = "eval";
+    myConfig.debug = true;
 
-gulp.task('compass',["server"], function() {
+    // Start a webpack-dev-server
+    new WebpackDevServer(webpack(myConfig), {
+        publicPath: "/" + myConfig.output.publicPath,
+        stats: {
+            colors: true
+        }
+    }).listen(8080, "localhost", function(err) {
+        if (err) throw new gutil.PluginError("webpack-dev-server", err);
+        gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
+    });
+});
 
-    function buildcompass(src){
+gulp.task("html", ["server"], () => {
+    gulp.watch("./*.html", browserSync.reload);
+});
+
+gulp.task('compass', ["server"], function() {
+
+    function buildcompass(src) {
 
         return gulp.src(src)
-          .pipe(compass({
-            css: 'css',
-            sass: 'sass',
-            image : "images",
-            relative : true,
-            style : "compressed",
-            javascript : "js"　
-          }))
-          .on("error",function(err){
-            console.log(err);
-          })
-          .pipe(autoprefixer({
-              browsers: ['ie 8-10','Firefox >= 20','Chrome >= 30','iOS >= 6','Android >= 4'],
-              cascade: false
-          }))
-          .pipe(browserSync.stream())
-          .pipe(gulp.dest('./css'));
+            .pipe(compass({
+                css: 'css',
+                sass: 'sass',
+                image: "images",
+                relative: true,
+                style: "compressed",
+                javascript: "js",
+            }))
+            .on("error", function(err) {
+                console.log(err);
+            })
+            .pipe(autoprefixer({
+                browsers: ['ie 8-10', 'Firefox >= 20', 'Chrome >= 30', 'iOS >= 6', 'Android >= 4'],
+                cascade: false
+            }))
+            .pipe(browserSync.stream())
+            .pipe(gulp.dest('./css'));
 
     }
 
     gulp.watch("./sass/*.scss")
 
-        .on("change",function(e){
+    .on("change", function(e) {
 
-            buildcompass("./sass/*.scss");
+        buildcompass("./sass/*.scss");
 
-        });
+    });
 
     return buildcompass("./sass/*.scss");
 });
 
-// gulp.task("js",["server"],function(){
+gulp.task("js", ["server"], function() {
 
-//  function buildjs(src){
-//      return gulp.src(src)
-//        .pipe(uglify())
-//        .pipe(gulp.dest('dist/all.js'));
-//  }
+    function buildjs(src) {
+        return gulp.src(src)
+            .pipe(uglify())
+            .pipe(gulp.dest('dist/all.js'));
+    }
 
-// });
+});
 
-gulp.task('default',['server','compass','html']);
+// gulp.task('default', ['server', 'webpack', 'html']);
+
+gulp.task('default', ['webpack-dev-server']);
