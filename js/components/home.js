@@ -38,11 +38,8 @@ class Home extends Component {
 
         return (
             <div className="pageWrap">
-              <Header />
-                <button onClick={this.props.onInitData} >
-                  获取文章
-                </button> 
-                <div className="articleWrapper">
+               <Header />
+        <div className="articles-container">
                     {this.props.article.map((article)=> {
                         return <ArticleItemWrapper key={article.id} data={article}/>;
                     })}

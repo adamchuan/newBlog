@@ -9,73 +9,15 @@ var webpack = require("webpack");
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("./webpack.config.js");
 
-gulp.task("default", ["webpack-dev-server"]);
-
-// Build and watch cycle (another option for development)
-// Advantage: No server required, can run app from filesystem
-// Disadvantage: Requests are not blocked until bundle is available,
-//               can serve an old app on refresh
-gulp.task("build-dev", ["webpack:build-dev"], function() {
-    gulp.watch(["./**"], ["webpack:build-dev"]);
-});
-
-// Production build
-gulp.task("build", ["webpack:build"]);
-
-gulp.task("webpack:build", function(callback) {
-    // modify some webpack config options
-    var myConfig = Object.create(webpackConfig);
-    myConfig.plugins = myConfig.plugins.concat(
-        new webpack.DefinePlugin({
-            "process.env": {
-                // This has effect on the react lib size
-                "NODE_ENV": JSON.stringify("production")
-            }
-        }),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin()
-    );
-
-    // run webpack
-    webpack(myConfig, function(err, stats) {
-        if (err) throw new gutil.PluginError("webpack:build", err);
-        gutil.log("[webpack:build]", stats.toString({
-            colors: true
-        }));
-        callback();
-    });
-});
-
-// modify some webpack config options
-var myDevConfig = Object.create(webpackConfig);
-myDevConfig.devtool = "sourcemap";
-myDevConfig.debug = true;
-
-// create a single instance of the compiler to allow caching
-var devCompiler = webpack(myDevConfig);
-
-gulp.task("webpack:build-dev", function(callback) {
-    // run webpack
-    devCompiler.run(function(err, stats) {
-        if (err) throw new gutil.PluginError("webpack:build-dev", err);
-        gutil.log("[webpack:build-dev]", stats.toString({
-            colors: true
-        }));
-        callback();
-    });
-});
 
 gulp.task("webpack-dev-server", function(callback) {
-    // modify some webpack config options
-    var myConfig = Object.create(webpackConfig);
-    myConfig.devtool = "eval";
-    myConfig.debug = true;
 
     // Start a webpack-dev-server
-    new WebpackDevServer(webpack(myConfig), {
-        publicPath: "/" + myConfig.output.publicPath,
+    new WebpackDevServer(webpack(webpackConfig), {
+        publicPath: "http://127.0.0.1:8080/js",
         stats: {
-            colors: true
+            colors: true,
+            hot: true,
         }
     }).listen(8080, "localhost", function(err) {
         if (err) throw new gutil.PluginError("webpack-dev-server", err);
@@ -87,7 +29,7 @@ gulp.task("html", ["server"], () => {
     gulp.watch("./*.html", browserSync.reload);
 });
 
-gulp.task('compass', ["server"], function() {
+gulp.task('compass', function() {
 
     function buildcompass(src) {
 
@@ -107,7 +49,7 @@ gulp.task('compass', ["server"], function() {
                 browsers: ['ie 8-10', 'Firefox >= 20', 'Chrome >= 30', 'iOS >= 6', 'Android >= 4'],
                 cascade: false
             }))
-            .pipe(browserSync.stream())
+            // .pipe(browserSync.stream())
             .pipe(gulp.dest('./css'));
 
     }
@@ -135,4 +77,4 @@ gulp.task("js", ["server"], function() {
 
 // gulp.task('default', ['server', 'webpack', 'html']);
 
-gulp.task('default', ['webpack-dev-server']);
+gulp.task('default', ['compass', 'webpack-dev-server']);

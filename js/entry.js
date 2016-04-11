@@ -9,7 +9,6 @@ import {
     markdown
 }
 from "markdown"
-require("!style!css!postcss!sass!../sass/style.scss");
 
 const store = createStore((article = [], action) => {
     switch (action.type) {
@@ -19,7 +18,17 @@ const store = createStore((article = [], action) => {
         default:
             return article
     }
-});
+})
+
+const tagsStore = createStore((tags = [], action) => {
+    switch (action.type) {
+        case 'load':
+            tags = action.data
+            return tags
+        default:
+            return tags
+    }
+})
 
 const rootEl = document.getElementById('root')
 
@@ -53,9 +62,12 @@ function getAricleFromDb() {
         }, (error) => console.log(error))
 }
 
+
 function render() {
-    ReactDOM.render(<Home article={store.getState()} onInitData={getAricleFromDb}/>, rootEl);
+    ReactDOM.render(<Home article={store.getState()} />, rootEl);
 }
 
 render()
 store.subscribe(render)
+
+getAricleFromDb()

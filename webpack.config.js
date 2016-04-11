@@ -15,15 +15,6 @@ module.exports = {
             query: {
                 presets: ['react', 'es2015']
             }
-        }, {
-            test: /\.scss|sass$/,
-            loader: ["style", "css", "postcss", "sass"]
         }]
-    },
-    postcss: () => {
-        return [autoprefixer({
-            browsers: ['ie 8-10', 'Firefox >= 20', 'Chrome >= 30', 'iOS >= 6', 'Android >= 4'],
-            cascade: false
-        })]
     }
 }

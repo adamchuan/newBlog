@@ -32,6 +32,8 @@
     "babel-preset-react": "^6.5.0",
     "browser-sync": "^2.11.2",
     "css-loader": "^0.23.1",
+    "extract-loader": "0.0.2",
+    "file-loader": "^0.8.5",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-compass": "^2.1.0",
@@ -45,7 +47,8 @@
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^1.14.1",
+    "webpack-stream": "^3.1.0"
   },
   "eslintConfig": {
     "env": {
