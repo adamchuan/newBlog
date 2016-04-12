@@ -1,73 +1,75 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import {
+    render
+}
+from 'react-dom'
 import {
     createStore
 }
 from 'redux'
-import Home from './components/home.js'
+import {
+    Provider
+}
+from 'react-redux'
 import {
     markdown
 }
 from "markdown"
+import Blog from './containers/Blog'
+import configureStore from './store/configureStore'
 
-const store = createStore((article = [], action) => {
-    switch (action.type) {
-        case 'load':
-            article = action.data
-            return article
-        default:
-            return article
-    }
-})
+const store = configureStore()
 
-const tagsStore = createStore((tags = [], action) => {
-    switch (action.type) {
-        case 'load':
-            tags = action.data
-            return tags
-        default:
-            return tags
-    }
-})
+render(
+    <Provider store={store}>
+        <Blog />
+    </Provider>,
+    document.getElementById( 'root' )
+)
 
-const rootEl = document.getElementById('root')
+document.addEventListener( 'DOMContentLoaded', () => {
+    AV.initialize( 'gA9Y4wP6AqhAp6W1BIsgw1E9', 'YIc35k2VUfFYO9MNgGkqxQ7c' );
 
-AV.initialize('gA9Y4wP6AqhAp6W1BIsgw1E9', 'YIc35k2VUfFYO9MNgGkqxQ7c');
+    let tags = new AV.Query( 'Tags' )
+    tags.find()
+        .then( ( data ) => {
+            let tags = data.map( ( object, index ) => {
+                return {
+                    name: object.get( 'name' ),
+                    index,
+                }
+            } )
 
-function getAricleFromDb() {
-    var query = new AV.Query('Article');
+            store.dispatch( {
+                type: 'TAGS_INIT',
+                data: tags
+            } )
+        } )
+
+    let query = new AV.Query( 'Article' )
     query
-        .select('title', 'summary', 'tags', 'date')
+        .select( 'title', 'summary', 'tags', 'date' )
         .find()
-        .then((data) => {
+        .then( ( data ) => {
             // 成功获得实例
 
-            let article = data.map((object) => {
-                let date = new Date(object.createdAt)
+            let posts = data.map( ( object ) => {
+                let date = new Date( object.createdAt )
 
                 return {
                     'id': object.id,
-                    'summary': markdown.toHTML(object.get('summary')),
-                    'title': object.get('title'),
-                    'tags': object.get('tags'),
+                    'summary': markdown.toHTML( object.get( 'summary' ) ),
+                    'title': object.get( 'title' ),
+                    'tags': object.get( 'tags' ),
                     'date': `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()}`,
                 }
-            })
+            } )
 
-            store.dispatch({
-                type: 'load',
-                data: article,
-            })
+            store.dispatch( {
+                type: 'POSTS_INIT',
+                data: posts,
+            } )
 
-        }, (error) => console.log(error))
-}
+        }, ( error ) => console.log( error ) )
 
-
-function render() {
-    ReactDOM.render(<Home article={store.getState()} />, rootEl);
-}
-
-render()
-store.subscribe(render)
-
-getAricleFromDb()
+} );

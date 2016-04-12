@@ -4,15 +4,15 @@ import React, {
 from 'react'
 
 class Header extends Component {
-    constructor(props) {
-        super(props)
+    constructor( props ) {
+        super( props )
     }
     render() {
         return (
             <header className="header-container">
               <div className="header-inner">
                 <div className="blog-name">
-                    船のBlog
+                    Adam Blog
                 </div>
                 <nav className="nav-wrapper">
                      <ul>
