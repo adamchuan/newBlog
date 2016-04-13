@@ -13,6 +13,8 @@ var webpackConfig = require( "./webpack.config.js" );
 gulp.task( "webpack-dev-server", function( callback ) {
 
     // Start a webpack-dev-server
+    webpackConfig.debug = true;
+    webpackConfig.devtool = "sourcemap";
     new WebpackDevServer( webpack( webpackConfig ), {
         publicPath: "http://127.0.0.1:8080/js",
         stats: {

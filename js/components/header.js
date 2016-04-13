@@ -2,7 +2,10 @@ import React, {
     Component, PropTypes
 }
 from 'react'
-
+import {
+    Link
+}
+from 'react-router'
 class Header extends Component {
     constructor( props ) {
         super( props )
@@ -16,10 +19,18 @@ class Header extends Component {
                 </div>
                 <nav className="nav-wrapper">
                      <ul>
-                        <li>POSTS</li>
-                        <li>TAGS</li>
-                        <li>PROJECTS</li>
-                        <li>ABOUT</li>
+                        <li>
+                            <Link to="/posts">POSTS</Link>
+                        </li>
+                        <li>
+                            <Link to="/tags">TAGS</Link>
+                        </li>
+                        <li>
+                            <Link to="/projects">PROJECTS</Link>
+                        </li>
+                        <li>
+                            <Link to="/about">About</Link>
+                        </li>
                     </ul>
                 </nav>
               </div>

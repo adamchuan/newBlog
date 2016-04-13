@@ -1,75 +1,128 @@
 import React from 'react'
+
 import {
     render
 }
 from 'react-dom'
+
 import {
     createStore
 }
 from 'redux'
+
 import {
     Provider
 }
 from 'react-redux'
+
+import {
+    Router, Route, IndexRoute, hashHistory
+}
+from 'react-router'
+
+import {
+    syncHistoryWithStore
+}
+from 'react-router-redux'
+
 import {
     markdown
 }
-from "markdown"
-import Blog from './containers/Blog'
+from 'markdown'
+
 import configureStore from './store/configureStore'
+import Footer from './components/footer'
+import Header from './components/header'
+import Post from './components/Post'
+import Posts from './components/Posts'
 
 const store = configureStore()
+const history = syncHistoryWithStore( hashHistory, store )
 
-render(
-    <Provider store={store}>
-        <Blog />
-    </Provider>,
-    document.getElementById( 'root' )
-)
+
+class Nav extends React.Component {
+    render() {
+        return (
+            <div>
+                <Header />
+                {this.props.children}
+                <Footer />
+            </div>
+        )
+    }
+}
+
+
 
 document.addEventListener( 'DOMContentLoaded', () => {
+
     AV.initialize( 'gA9Y4wP6AqhAp6W1BIsgw1E9', 'YIc35k2VUfFYO9MNgGkqxQ7c' );
 
-    let tags = new AV.Query( 'Tags' )
-    tags.find()
-        .then( ( data ) => {
-            let tags = data.map( ( object, index ) => {
-                return {
-                    name: object.get( 'name' ),
-                    index,
-                }
-            } )
-
-            store.dispatch( {
-                type: 'TAGS_INIT',
-                data: tags
-            } )
+    Promise.all( [
+            getTagsPromise(),
+            getPostsPromise()
+        ] )
+        .then( () => {
+            render(
+                <Provider store={store}>
+                { /* Tell the Router to use our enhanced history */ }
+                <Router history={hashHistory}>
+                    <Route path="/" component={Nav}>
+                        <IndexRoute component={Posts}/>
+                        <Route path="/posts" component={Posts} />
+                        <Route path="/post/:postid" component={Post} />
+                    </Route>
+                </Router>
+            </Provider>,
+                document.getElementById( 'root' )
+            )
         } )
 
-    let query = new AV.Query( 'Article' )
-    query
-        .select( 'title', 'summary', 'tags', 'date' )
-        .find()
-        .then( ( data ) => {
-            // 成功获得实例
+    function getTagsPromise() {
+        return new AV.Query( 'Tags' )
+            .find()
+            .then( ( data ) => {
+                let tags = data.map( ( object, index ) => {
+                    return {
+                        name: object.get( 'name' ),
+                        index,
+                    }
+                } )
 
-            let posts = data.map( ( object ) => {
-                let date = new Date( object.createdAt )
+                store.dispatch( {
+                    type: 'TAGS_INIT',
+                    data: tags
+                } )
+            }, err => console.log( err ) )
+            .catch( err => console.log( err ) )
 
-                return {
-                    'id': object.id,
-                    'summary': markdown.toHTML( object.get( 'summary' ) ),
-                    'title': object.get( 'title' ),
-                    'tags': object.get( 'tags' ),
-                    'date': `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()}`,
-                }
-            } )
+    }
 
-            store.dispatch( {
-                type: 'POSTS_INIT',
-                data: posts,
-            } )
+    function getPostsPromise() {
+        return new AV.Query( 'Article' )
+            .select( 'title', 'summary', 'tags', 'date' )
+            .find()
+            .then( ( data ) => {
 
-        }, ( error ) => console.log( error ) )
+                let posts = data.map( ( object ) => {
+                    let date = new Date( object.createdAt )
+
+                    return {
+                        'id': object.id,
+                        'summary': markdown.toHTML( object.get( 'summary' ) ),
+                        'title': object.get( 'title' ),
+                        'tags': object.get( 'tags' ),
+                        'date': `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()}`,
+                    }
+                } )
+
+                store.dispatch( {
+                    type: 'POSTS_INIT',
+                    data: posts,
+                } )
+
+            }, err => console.log( err ) )
+            .catch( err => console.log( err ) )
+    }
 
 } );

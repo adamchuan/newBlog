@@ -3,6 +3,7 @@ var autoprefixer = require( 'autoprefixer' )
 
 module.exports = {
     entry: "./js/entry.js",
+    debug: false,
     output: {
         path: path.join( __dirname, 'js' ),
         filename: "bundle.js"

@@ -2,7 +2,10 @@ import {
     combineReducers
 }
 from 'redux'
-
+import {
+    routerReducer
+}
+from 'react-router-redux'
 
 function tags( state = [], action ) {
     let nextstate
@@ -28,9 +31,30 @@ function posts( state = [], action ) {
     return nextstate
 }
 
+function post( state = {
+    id: '',
+    title: '',
+    summary: '',
+    tags: [],
+    content: '',
+    postTime: ''
+}, action ) {
+    let nextstate
+    switch ( action.type ) {
+        case 'POST_INIT':
+            nextstate = action.data
+            break
+        default:
+            nextstate = state
+    }
+    return nextstate
+}
+
 const rootReducer = combineReducers( {
     posts,
-    tags
+    tags,
+    post,
+    routing: routerReducer,
 } )
 
 export default rootReducer
