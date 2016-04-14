@@ -1,61 +1,60 @@
 import React from 'react'
 
 import {
-  connect
+    connect
 }
 from 'react-redux'
 
 import {
-  markdown
+    markdown
 }
 from "markdown"
 
 import {
-  Link
+    Link
 }
 from 'react-router'
 
 class Post extends React.Component {
 
-  componentWillReceiveProps( nextProps ) {
-    this.id = nextProps.params.postid
-    this.fetchPostData()
-  }
+    componentWillReceiveProps(nextProps) {
+        this.id = nextProps.params.postid
 
-  fetchPostData() {
+        dispatch({
+            'type': 'SELECT_POST',
+            'selectPostId': this.id
+        })
 
-    const {
-      dispatch
-    } = this.props
+        this.fetchPostData()
+    }
 
-    new AV.Query( 'Article' )
-      .select( 'title', 'summary', 'tags', 'content' )
-      .get( this.id )
-      .then( ( object ) => {
-        let date = new Date( object.createdAt )
-        dispatch( {
-          type: 'POST_INIT',
-          data: {
-            'id': object.id,
-            'summary': markdown.toHTML( object.get( 'summary' ) ),
-            'title': object.get( 'title' ),
-            'tags': object.get( 'tags' ),
-            'content': markdown.toHTML( object.get( 'content' ) ),
-            'postTime': `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()}`,
-          }
-        } )
-      } )
-      .catch( err => console.log( err ) )
-  }
+    fetchPostData() {
 
-  render() {
-    const {
-      title, date, content, summary, postTime
-    } = this.props
+        const {
+            dispatch
+        } = this.props
 
-    console.log( this.props )
-    return (
-      <section className="post-detail-wrapper">
+        new AV.Query('Article')
+            .select('content')
+            .get(this.id)
+            .then((object) => {
+                let date = new Date(object.createdAt)
+                dispatch({
+                    type: 'INIT_POST',
+                    content: markdown.toHTML(object.get('content')),
+                })
+            })
+            .catch(err => console.log(err))
+    }
+
+    render() {
+        const {
+            title, date, content, summary, postTime
+        } = this.props
+
+        console.log(this.props)
+        return (
+            <section className="post-detail-wrapper">
                 <header className="post-header-wrap">
                   <h2 className="post-title">
                        {title}
@@ -69,27 +68,27 @@ class Post extends React.Component {
                 </header>
                 <div className="post-content" dangerouslySetInnerHTML={{__html:summary + content}}></div>
             </section>
-    )
-  }
+        )
+    }
 }
 
 Post.PropTypes = {
-  title: React.PropTypes.string.isRequired,
-  tags: React.PropTypes.arrayOf(
-    React.PropTypes.number.isRequired
-  ).isRequired,
-  summary: React.PropTypes.string.isRequired,
-  content: React.PropTypes.string.isRequired,
-  postTime: React.PropTypes.string.isRequired,
+    title: React.PropTypes.string.isRequired,
+    tags: React.PropTypes.arrayOf(
+        React.PropTypes.number.isRequired
+    ).isRequired,
+    summary: React.PropTypes.string.isRequired,
+    content: React.PropTypes.string.isRequired,
+    postTime: React.PropTypes.string.isRequired,
 }
 
 
-export default connect( ( state ) => {
-  const {
-    title, summary, content, postTime, tags
-  } = state.post
+export default connect((state) => {
+    const {
+        title, summary, content, postTime, tags
+    } = state.posts[state.selectPostId]
 
-  return {
-    title, summary, content, postTime, tags
-  }
-} )( Post )
+    return {
+        title, summary, content, postTime, tags
+    }
+})(Post)
