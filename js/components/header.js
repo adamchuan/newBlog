@@ -3,7 +3,7 @@ import React, {
 }
 from 'react'
 import {
-    Link
+    Link, IndexLink
 }
 from 'react-router'
 class Header extends Component {
@@ -20,7 +20,7 @@ class Header extends Component {
                 <nav className="nav-wrapper">
                      <ul>
                         <li>
-                            <Link to="/posts">POSTS</Link>
+                            <IndexLink to="/">POSTS</IndexLink>
                         </li>
                         <li>
                             <Link to="/tags">TAGS</Link>

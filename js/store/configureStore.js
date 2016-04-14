@@ -8,10 +8,9 @@ import rootReducer from '../reducer/index'
 
 export default function configureStore( initialState ) {
     const store = createStore(
-        rootReducer
-        // initialState,
-        // applyMiddleware( thunkMiddleware, createLogger() ) 
-
+        rootReducer,
+        initialState,
+        applyMiddleware( thunkMiddleware, createLogger() )
     )
 
     if ( module.hot ) {

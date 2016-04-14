@@ -14,13 +14,14 @@ import {
 from 'react-redux'
 
 class Post extends Component {
+
   render() {
     let {
       title, date, summary, id
-    } = this.props.data
+    } = this.props.post
     return (
       <Link to={`post/${id}`}>
-       <section className="post-wrap">
+       <section className="post-wrap" >
         <header className="post-header-wrap">
           <h2 className="post-title">
                {title}
@@ -44,13 +45,14 @@ class Posts extends Component {
   render() {
     const {
       posts,
-      tags
+      tags,
+      dispatch
     } = this.props
     return (
       <div className="pageWrap">
           <div className="posts-container">
               {posts.map((post)=> {
-                  return <Post key={post.id} data={post}/>;
+                  return <Post key={post.id} post={post} dispatch = {dispatch}/>;
               })}
           </div>
       </div>
@@ -58,24 +60,22 @@ class Posts extends Component {
   }
 }
 
+
 Posts.PropTypes = {
   posts: PropTypes.array.isRequired,
   tags: PropTypes.arrayOf(
     PropTypes.number.isRequired
   ).isRequired,
+  dispatch: PropTypes.func.isRequired,
 }
 
 
-function mapStateToProps( state ) {
-  const {
-    posts,
-    tags
-  } = state
+export default connect( ( state ) => {
+  const tags = state.tags,
+    posts = state.posts.posts
 
   return {
     posts,
     tags
   }
-}
-
-export default connect( mapStateToProps )( Posts )
+} )( Posts )

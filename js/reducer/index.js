@@ -7,9 +7,9 @@ import {
 }
 from 'react-router-redux'
 
-function tags(state = [], action) {
+function tags( state = [], action ) {
     let nextstate
-    switch (action.type) {
+    switch ( action.type ) {
         case 'TAGS_INIT':
             nextstate = action.data
             break
@@ -19,24 +19,38 @@ function tags(state = [], action) {
     return nextstate
 }
 
-function posts(state = {
+function posts( state = {
     isFetching: false,
     selectPostId: null,
     posts: []
-}, action) {
-    switch (action.type) {
+}, action ) {
+    switch ( action.type ) {
         case 'INIT_POSTS':
             state.posts = action.data
             break
         case 'SELECT_POST':
-            state.selectPost = action.selectPostId
+            state.selectPostId = action.selectPostId
+
+    }
+    return state
+}
+
+function post( state = {
+    isFetching: false,
+    title: '',
+    summary: '',
+    content: '',
+    tags: [],
+}, action ) {
+    switch ( action.type ) {
+        case 'REQUEST_POST':
+            state = Object.assign( {}, state, {
+                isFetching: true,
+            } )
         case 'INIT_POST':
-            let post = state.posts.find((post, i) => {
-                return post.id === state.selectPostId
-            })
-            if (post) {
-                post.content = action.content
-            }
+            state = Object.assign( {}, action.data, {
+                isFetching: false,
+            } )
             break
         default:
             break
@@ -44,10 +58,11 @@ function posts(state = {
     return state
 }
 
-const rootReducer = combineReducers({
+const rootReducer = combineReducers( {
     posts,
+    post,
     tags,
     routing: routerReducer,
-})
+} )
 
 export default rootReducer

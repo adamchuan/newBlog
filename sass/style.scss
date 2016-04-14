@@ -52,18 +52,22 @@ a{
             font-size:0;
         }
         li{
+            display:inline-block;    
             cursor: pointer;
             margin-left:10px;
-            display:inline-block;
             padding:20px;
-            line-height:20px;
-            color:rgb(64, 64, 64);
-            font-size:14px;
-            font-weight:800;
-            background-color:rgba(0,0,0,0);
             transition:background-color 0.5s;
             &:hover{
                 background-color:rgba(0,0,0,0.1);
+            }
+            a{
+                display: block;
+                line-height:20px;
+                color:rgb(64, 64, 64);
+                font-size:14px;
+                font-weight:800;
+                background-color:rgba(0,0,0,0);
+
             }
         }
     }
@@ -75,6 +79,8 @@ a{
 .posts-container{
     width:640px;
     margin:0 auto;
+    box-sizing:border-box;
+    padding:20px;
 }
 .post-title {
     word-break: break-all;
@@ -87,6 +93,16 @@ a{
     font-style:italic;
     line-height: 24px;
     font-size:14px;
+}
+
+.post-detail-wrapper{
+    width:640px;
+    max-width:100%;
+    margin:0 auto;
+    padding:20px;
+    .post-title{
+        text-align: center;
+    }
 }
 
 
