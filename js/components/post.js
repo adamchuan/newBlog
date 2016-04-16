@@ -17,25 +17,25 @@ import {
 }
 from 'react-router'
 
-marked.setOptions( {
-    highlight: ( code ) => {
-        return highlightAuto( code ).value
+marked.setOptions({
+    highlight: (code) => {
+        return highlightAuto(code).value
     }
-} );
+});
 
 class Post extends React.Component {
 
-    componentWillReceiveProps( nextProps ) {
-        if ( this.id != nextProps.params.postid ) {
+    componentWillReceiveProps(nextProps) {
+        if (this.id != nextProps.params.postid) {
             this.id = nextProps.params.postid
-            this.props.dispatch( {
+            this.props.dispatch({
                 type: 'REQUEST_POST'
-            } )
+            })
         }
     }
 
     componentDidMount() {
-        if ( !this.props.isFetching ) {
+        if (!this.props.isFetching) {
             this.fetchPostData()
         }
     }
@@ -46,50 +46,61 @@ class Post extends React.Component {
             dispatch
         } = this.props
 
-        new AV.Query( 'Article' )
-            .select( 'content', 'title', 'summary', 'tags' )
-            .get( this.props.params.postid )
-            .then( ( object ) => {
-                let date = new Date( object.createdAt )
+        new AV.Query('Article')
+            .select('content', 'title', 'summary', 'tags')
+            .get(this.props.params.postid)
+            .then((object) => {
+                let date = new Date(object.createdAt),
+                    content = marked(object.get('content'))
 
-                let content = marked( object.get( 'content' ) )
-                dispatch( {
+                dispatch({
                     type: 'INIT_POST',
                     data: {
                         content: content,
-                        summary: object.get( 'summary' ),
-                        title: object.get( 'title' ),
-                        tags: object.get( 'tags' ),
+                        summary: object.get('summary'),
+                        title: object.get('title'),
+                        tags: object.get('tags'),
+                        date: `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()}`,
                     }
-                } )
-            } )
-            .catch( err => console.log( err ) )
+                })
+            })
+            .catch(err => console.log(err))
     }
 
     render() {
         const {
-            title, date, content, summary, postTime, isFetching
+            title, date, content, summary, postTime, isFetching, tags
         } = this.props
+
         return (
             <div>
             {
                 isFetching
-                ? <div>
+                ? (<div>
                     正在加载中 
-                  </div>
+                  </div>)
                 : <section className="post-detail-wrapper">
                     <header className="post-header-wrap">
                       <h2 className="post-title">
                            {title}
                       </h2>
-                      <small>
-                        <time className="post-time"> 
-                            <i className="icon-calendar"></i>
-                            <span>{date}</span>
-                        </time>
-                      </small>
+                      <div className="post-info">
+                            <time className="post-time"> 
+                                发表于
+                                <span>{date}</span>
+                            </time>
+                          {
+                            tags.map((tagname)=>{
+                                console.log(tagname)
+                                return (
+                                    <span className='post-tag'>{tagname}</span>
+                                )
+                            })
+                          }
+                      </div>
                     </header>
-                    <div className="post-content" dangerouslySetInnerHTML={{__html:summary + content}}></div>
+                    <article className="post-content" dangerouslySetInnerHTML={{__html:summary + content}}>
+                    </article>
                  </section>
             }
             </div>
@@ -109,8 +120,19 @@ Post.PropTypes = {
 }
 
 
-export default connect( ( state ) => {
+export default connect((state) => {
 
-    return Object.assign( {}, state.post )
+    var props = Object.assign({}, state.post)
 
-} )( Post )
+    props.tags.forEach((value, index, arr) => {
+        let tag = state.tags.find((v, i) => {
+            return i === index
+        })
+        if (tag) {
+            arr[index] = tag.name
+        }
+    })
+
+    return props
+
+})(Post)
