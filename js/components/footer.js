@@ -1,14 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 
-class Footer extends Component {
-  constructor( props ) {
-    super( props )
-  }
-  render() {
+class Footer extends React.Component {
+  render () {
     return (
-        <footer className="page_footer">
+      <footer className='page_footer'>
             COPYRIGHT@AdamChuan
-        </footer>
+      </footer>
     )
   }
 }

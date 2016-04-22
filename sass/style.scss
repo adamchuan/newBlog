@@ -4,13 +4,10 @@ body{
     font-size:14px;
     color:#000;
 }
-.page_footer{
-    padding:40px 0;
-    background-color:#fff;
-    color:#333;
-    text-align:center;
-}
 
+html{
+    overflow-y: scroll;
+}
 
 html,
 body{
@@ -23,8 +20,19 @@ a{
     text-decoration: none;
 }
 
-#root{
+button{
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 0px;
+    box-shadow:none;
+    outline:none;
+}
 
+#root{
+    height:100%;
+    .root-inner{
+        height:100%;
+    }
 }
 
 .header-container{
@@ -75,6 +83,16 @@ a{
             }
         }
     }
+}
+.page_footer{   
+    height:40px;
+    line-height:40px;
+    background-color:#fff;
+    color:#333;
+    text-align:center;
+}
+.main{
+   min-height: calc(100% - 100px);
 }
 
 .posts-container{
@@ -170,4 +188,283 @@ a{
 
 }
 
+.center-wrapper{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index:1;
+    text-align: center;
+    &:after{
+        display: inline-block;
+        height:100%;
+        width:1px;
+        margin-left:-1px;
+        content:"";
+        vertical-align: middle;
+    }
+    .center-inner{
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
 
+.btn{
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    &.btn1{
+        color: #333;
+        background-color: transparent;
+        border-color: #ccc;
+    }
+}
+.icon-load{
+    width: 30px;
+    height: 30px;
+}
+
+.form-wrapper{
+    width:440px;
+    .form-row{
+        margin:20px 0;
+        font-size:0;
+    }
+    .form-label{
+        display:inline-block;
+        font-size:14px;
+        color:#666;
+        width:100px;
+        line-height:34px;
+        height:34px;
+        text-align:right;
+        vertical-align: middle;
+    }
+    .form-input{
+        display:inline-block;
+        width:320px;
+        margin-left:20px;
+        font-size:14px;
+        height: 34px;
+        padding: 6px 12px;
+        line-height:20px;
+        outline:none;
+        border:1px solid #ccc;
+        box-sizing:border-box;
+        vertical-align: middle;
+        text-align:left;
+        &:focus {
+            border-color: #66afe9;
+            outline: 0;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+        }
+    }
+    .form-btn{
+        text-align:left;
+        margin-left:120px;
+    }
+    .form-notice{
+        margin-left:120px;
+        color:#c7254e;
+        font-size:14px;
+    }
+}
+.dialog-wrapper{
+    position: fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    font-size:0;
+    z-index:999;
+    text-align:center;
+    background-color:rgba(0,0,0,0.6);
+    animation:fadeIn 0.5s;
+    &:after{
+        display: inline-block;
+        height:100%;
+        width:1px;
+        margin-left:-1px;
+        content:"";
+        vertical-align: middle;
+    }
+    .dialog{
+        display: inline-block;
+        vertical-align: middle;
+        font-size:14px;
+        color:#333;
+        padding:20px;
+        box-sizing:border-box;
+    }
+}
+
+.editor-aside{
+    position: fixed;
+    top:60px;
+    left:0;
+    bottom:0;
+    width:200px;
+    z-index:99;
+    overflow-y:scroll;
+    border-right:1px solid #ccc;
+}
+.editor-aside-item{
+    display:block;
+    padding:10px;
+    line-height:20px;
+    text-align:center;
+    color:#333;
+    font-size:14px;
+    border-bottom:1px solid #f2f2f2;
+    &:hover{
+        background-color:#ddd;
+    }
+    &:active{
+        background-color:#aaa;
+    }
+}
+
+.editor-area{
+    margin-left:220px;
+    background-color: #f3f3f3;
+    padding:20px;
+    overflow: hidden;
+    .editor-tags-wrapper{
+        position:relative;
+        height:20px;
+        line-height:20px; 
+    }
+    .editor-tag-select-panel{
+        position: absolute;
+        padding:6px;
+        top:32px;
+        left:0;
+        z-index:1;
+        background-color:#fff;
+        border:1px solid #ccc;
+        .editor-tags-item{
+            cursor:pointer
+        }
+    }
+    .editor-row{
+        margin-top:10px;
+        display:block;
+        background-color:#fff;  
+        padding:6px 12px;
+        font-size:14px;
+    }
+    .editor-tags-item{
+        display: inline-block;
+        padding: 0 8px;
+        color: #017e66;
+        background-color: #e7f2ed;
+        height: 20px;
+        line-height: 20px;
+        font-weight: 400;
+        font-size: 13px;
+        text-align: center;
+        margin-right: .5rem;
+    }
+    .i-close{
+        display:inline-block;
+        width:10px;
+        height:10px; 
+        path{
+            stroke: rgb(99,99,99);
+            stroke-width: 4;
+            fill: rgba(0,0,0,0);
+        }
+
+    }
+    .editor-title{
+        height: 46px;
+        padding: 10px;
+        font-size: 18px;
+        line-height: 1.33;
+        border-radius: 3px;
+        color: #555;
+        border: none;
+        box-shadow: none;
+        outline: none;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+    }
+    .editor-summary{
+        height: 30px;
+        padding: 10px;
+        font-size: 14px;
+        line-height: 1.33;
+        border-radius: 3px;
+        color: #555;
+        border: none;
+        box-shadow: none;
+        outline: none;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+    }
+    .editor-panel-wrapper{
+        display:flex;
+        padding:20px;
+        height:100%;
+        box-sizing:border-box;
+    }
+    .editor-panel{
+        display:block;
+        align-self:stretch;
+        flex:1;
+        font-size:14px;
+        color:#333;
+        margin-left:20px;
+        &:first-child{
+            margin-left:0
+        }
+    }
+    .editor-content{
+        display:block;
+        width: 100%;
+        height:400px;
+        padding:20px;
+        font-size:14px;
+        color:#666;
+        outline:0;
+        border:1px solid #ccc;
+        box-sizing:border-box;
+        background-color: white;
+        overflow-y: scroll;
+    }
+    .editor-markdown{
+        display:block;
+        height:400px;
+        padding:20px;
+        font-size:14px;
+        color:#666;
+        overflow-y: scroll;
+        border:1px solid #ccc;
+        background-color: white;
+        padding:20px;
+        box-sizing:border-box;
+    }
+}
+
+
+
+@keyframes fadeIn{
+    0%{
+        opacity: 0;
+    }
+}
