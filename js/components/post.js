@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import marked from 'marked'
 import { highlightAuto } from 'highlight.js'
 import { connect } from 'react-redux'
-import { requestPostIfNeeded } from '../actions'
+import { requestPost } from '../actions'
 import DialogLoad from './dialogLoad.js'
 
 marked.setOptions({
@@ -17,7 +17,7 @@ class Post extends Component {
     super(props, context)
     this.id = this.props.params.postid
     const { dispatch } = this.props
-    dispatch(requestPostIfNeeded(this.id))
+    dispatch(requestPost(this.id))
   }
 
   componentWillReceiveProps (nextProps) {
@@ -25,8 +25,16 @@ class Post extends Component {
       const { dispatch } = this.props
       const postid = nextProps.params.postid
       this.id = postid
-      dispatch(requestPostIfNeeded(postid))
+      dispatch(requestPost(postid))
     }
+  }
+
+  compoentDidMount (){
+    let el = document.createElement('div')
+    el.setAttribute('data-thread-key', this.id)
+    el.setAttribute('data-url', window.location.toString())
+    window.DUOSHUO.EmbedThread(el)
+    this.refs.commentEl.appendChild(el)
   }
 
   render () {
@@ -43,13 +51,15 @@ class Post extends Component {
               发表于
               <span>{date}</span>
             </time>
-            {tags.map((tagname) => {
-              return (<span className='post-tag'>{tagname}</span>)
+            {tags.map((tagname, index) => {
+              return (<span key={index} className='post-tag'>{tagname}</span>)
             })}
           </div>
         </header>
         <article className='post-content' dangerouslySetInnerHTML={{__html: summary + markContent}}>
         </article>
+        <div ref='commentEl' className='comment-area'>
+        </div>
       </section>
       )
   }

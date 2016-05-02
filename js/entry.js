@@ -31,7 +31,6 @@ class Nav extends Component {
 }
 
 function requireAuth (nextState, replace) {
-  return true
   if (!store.getState().user.isLogin) {
     replace({
       pathname: '/login',
@@ -105,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         store.dispatch({
           type: 'INIT_POSTS',
-          data: posts
+          posts
         })
       }, (err) => console.log(err))
       .catch((err) => console.log(err))

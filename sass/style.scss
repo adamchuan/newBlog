@@ -1,4 +1,16 @@
-@import "_reset";
+@import "./bootstrap/variables.scss";
+@import "./bootstrap/mixins";
+@import "./bootstrap/normalize";
+@import "./bootstrap/print";
+
+@import "bootstrap/scaffolding";
+@import "bootstrap/type";
+@import "bootstrap/code";
+@import "bootstrap/grid";
+@import "bootstrap/tables";
+@import "bootstrap/forms";
+@import "bootstrap/buttons";
+
 body{
     background-color:#fff;
     font-size:14px;
@@ -13,19 +25,6 @@ html,
 body{
     height:100%;
     font-family:"Helvetica Neue",Helvetica,Arial , "Microsoft YaHei",sans-serif;
-}
-
-a{
-    color:inherit;
-    text-decoration: none;
-}
-
-button{
-    -webkit-appearance: none;
-    background-color: transparent;
-    border: 0px;
-    box-shadow:none;
-    outline:none;
 }
 
 #root{
@@ -84,108 +83,22 @@ button{
         }
     }
 }
+
+.main{
+   min-height: calc(100% - 100px);
+}
+
 .page_footer{   
     height:40px;
     line-height:40px;
     background-color:#fff;
     color:#333;
     text-align:center;
-}
-.main{
-   min-height: calc(100% - 100px);
-}
-
-.posts-container{
-    width:640px;
-    margin:0 auto;
-    box-sizing:border-box;
-    padding:20px;
-}
-.post-title {
-    word-break: break-all;
-    font-size: 32px;
-    font-weight: bold;
-    line-height: 1.5;
-}
-.post-content{
-    color:rgb(163, 163, 163);
-    font-style:italic;
-    line-height: 24px;
-    font-size:14px;
-}
-
-.post-detail-wrapper{
-    width:640px;
-    max-width:100%;
-    margin:0 auto;
-    padding:20px;
-    .post-title{
-        margin: 10px 0;
-        font-family: inherit;
-        font-weight: bold;
-        line-height: 20px;
-        color: inherit;
-        text-rendering: optimizelegibility;
-        word-break: break-all;
-        font-size: 32px;
-        font-weight: bold;
-        line-height: 1.5;
-        color:#555;
+    .copyright{
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 0;
     }
-    .post-content{
-        color:#2f2f2f;
-        font-size: 16px;
-        font-weight: normal;
-        line-height: 1.7;
-        font-style: normal;
-        font-family: "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
-        a{
-            color: #4094c7;
-            &:hover{
-                color:#4094c7;
-            }
-        }
-        pre{
-            margin:0 0 20px;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            background-color: whitesmoke;
-            border-left: 4px solid #999999;
-            word-break: break-word;
-            font-size: 15px;
-            font-weight: 100;
-            line-height: 30px;
-        }
-        img{
-            display: block;
-            margin: 20px auto;
-        }
-        p{
-            margin: 0 auto 25px;
-        }
-    }
-    .post-info{
-        margin: 20px 0;
-    }
-    .post-time{
-        display: inline-block;
-        margin-right: 10px;
-        font-size: 12px;
-        color: #999;
-    }
-    .post-tag{
-        display: inline-block;
-        padding:0 10px;
-        vertical-align:middle;
-        margin-right: 10px;
-        font-size: 12px;
-        height:16px;
-        line-height:16px;
-        color: #999;
-        border:1px #999 solid ;
-        border-radius:16px;
-    }
-
 }
 
 .center-wrapper{
@@ -210,78 +123,15 @@ button{
     }
 }
 
-.btn{
-    display: inline-block;
-    padding: 6px 12px;
-    margin-bottom: 0;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.42857143;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    touch-action: manipulation;
-    cursor: pointer;
-    user-select: none;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    &.btn1{
-        color: #333;
-        background-color: transparent;
-        border-color: #ccc;
-    }
-}
-.icon-load{
-    width: 30px;
-    height: 30px;
+.word-mid{
+    vertical-align:middle;
 }
 
 .form-wrapper{
     width:440px;
-    .form-row{
-        margin:20px 0;
-        font-size:0;
-    }
-    .form-label{
-        display:inline-block;
-        font-size:14px;
-        color:#666;
-        width:100px;
-        line-height:34px;
-        height:34px;
-        text-align:right;
-        vertical-align: middle;
-    }
-    .form-input{
-        display:inline-block;
-        width:320px;
-        margin-left:20px;
-        font-size:14px;
-        height: 34px;
-        padding: 6px 12px;
-        line-height:20px;
-        outline:none;
-        border:1px solid #ccc;
-        box-sizing:border-box;
-        vertical-align: middle;
-        text-align:left;
-        &:focus {
-            border-color: #66afe9;
-            outline: 0;
-            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-        }
-    }
-    .form-btn{
-        text-align:left;
-        margin-left:120px;
-    }
-    .form-notice{
-        margin-left:120px;
-        color:#c7254e;
-        font-size:14px;
-    }
+    text-align: left;
 }
+
 .dialog-wrapper{
     position: fixed;
     top:0;
@@ -291,8 +141,7 @@ button{
     font-size:0;
     z-index:999;
     text-align:center;
-    background-color:rgba(0,0,0,0.6);
-    animation:fadeIn 0.5s;
+    background-color:rgba(0,0,0,0.2);
     &:after{
         display: inline-block;
         height:100%;
@@ -311,160 +160,12 @@ button{
     }
 }
 
-.editor-aside{
-    position: fixed;
-    top:60px;
-    left:0;
-    bottom:0;
-    width:200px;
-    z-index:99;
-    overflow-y:scroll;
-    border-right:1px solid #ccc;
-}
-.editor-aside-item{
-    display:block;
-    padding:10px;
-    line-height:20px;
-    text-align:center;
-    color:#333;
-    font-size:14px;
-    border-bottom:1px solid #f2f2f2;
-    &:hover{
-        background-color:#ddd;
-    }
-    &:active{
-        background-color:#aaa;
-    }
-}
-
-.editor-area{
-    margin-left:220px;
-    background-color: #f3f3f3;
-    padding:20px;
-    overflow: hidden;
-    .editor-tags-wrapper{
-        position:relative;
-        height:20px;
-        line-height:20px; 
-    }
-    .editor-tag-select-panel{
-        position: absolute;
-        padding:6px;
-        top:32px;
-        left:0;
-        z-index:1;
-        background-color:#fff;
-        border:1px solid #ccc;
-        .editor-tags-item{
-            cursor:pointer
-        }
-    }
-    .editor-row{
-        margin-top:10px;
-        display:block;
-        background-color:#fff;  
-        padding:6px 12px;
-        font-size:14px;
-    }
-    .editor-tags-item{
-        display: inline-block;
-        padding: 0 8px;
-        color: #017e66;
-        background-color: #e7f2ed;
-        height: 20px;
-        line-height: 20px;
-        font-weight: 400;
-        font-size: 13px;
-        text-align: center;
-        margin-right: .5rem;
-    }
-    .i-close{
-        display:inline-block;
-        width:10px;
-        height:10px; 
-        path{
-            stroke: rgb(99,99,99);
-            stroke-width: 4;
-            fill: rgba(0,0,0,0);
-        }
-
-    }
-    .editor-title{
-        height: 46px;
-        padding: 10px;
-        font-size: 18px;
-        line-height: 1.33;
-        border-radius: 3px;
-        color: #555;
-        border: none;
-        box-shadow: none;
-        outline: none;
-        background-color: transparent;
-        padding: 0;
-        margin: 0;
-    }
-    .editor-summary{
-        height: 30px;
-        padding: 10px;
-        font-size: 14px;
-        line-height: 1.33;
-        border-radius: 3px;
-        color: #555;
-        border: none;
-        box-shadow: none;
-        outline: none;
-        background-color: transparent;
-        padding: 0;
-        margin: 0;
-    }
-    .editor-panel-wrapper{
-        display:flex;
-        padding:20px;
-        height:100%;
-        box-sizing:border-box;
-    }
-    .editor-panel{
-        display:block;
-        align-self:stretch;
-        flex:1;
-        font-size:14px;
-        color:#333;
-        margin-left:20px;
-        &:first-child{
-            margin-left:0
-        }
-    }
-    .editor-content{
-        display:block;
-        width: 100%;
-        height:400px;
-        padding:20px;
-        font-size:14px;
-        color:#666;
-        outline:0;
-        border:1px solid #ccc;
-        box-sizing:border-box;
-        background-color: white;
-        overflow-y: scroll;
-    }
-    .editor-markdown{
-        display:block;
-        height:400px;
-        padding:20px;
-        font-size:14px;
-        color:#666;
-        overflow-y: scroll;
-        border:1px solid #ccc;
-        background-color: white;
-        padding:20px;
-        box-sizing:border-box;
-    }
-}
-
-
-
 @keyframes fadeIn{
     0%{
         opacity: 0;
     }
 }
+
+@import "post.scss";
+@import "icon.scss";
+@import "editor.scss";

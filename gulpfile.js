@@ -2,8 +2,8 @@ var gulp = require('gulp')
 var gutil = require('gulp-util')
 var browserSync = require('browser-sync').create()
 var compass = require('gulp-compass')
-var uglify = require('gulp-uglify')
-var rename = require('gulp-rename')
+// var uglify = require('gulp-uglify')
+// var rename = require('gulp-rename')
 var autoprefixer = require('gulp-autoprefixer')
 var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
@@ -80,7 +80,7 @@ gulp.task('compass', function () {
   gulp.watch('./sass/*.scss')
 
     .on('change', function (e) {
-      buildcompass('./sass/*.scss')
+      buildcompass('./sass/style.scss')
     })
 
   return buildcompass('./sass/*.scss')

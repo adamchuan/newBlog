@@ -62,28 +62,31 @@ class Login extends React.Component {
       ? <DialogLoad />
       : (<div className='center-wrapper'>
         <div className='center-inner'>
-          <div className='form-wrapper'>
-            <div className='form-row'>
-              <label className='form-label'>
-                账户
-              </label>
-              <input ref='usernameEl' type='text'autoComplete='off' placeholder='username' className='form-input' />
-            </div>
-            <div className='form-row'>
-              <label className='form-label'>
-                密码
-              </label>
-              <input ref='passwordEl' type='password'autoComplete='off' placeholder='password' className='form-input' />
-            </div>
-            <div className='form-row'>
-              <div className='form-btn'>
-                <div className='btn btn1' onClick={this.login.bind(this)}>
-                  登陆
-                </div>
+          <div className='form-wrapper form-horizontal'>
+            <div className='form-group'>
+              <label for='inputEmail3' className='col-sm-2 control-label'>账户</label>
+              <div className='col-sm-10'>
+                <input ref='usernameEl' type='text' className='form-control' id='inputEmail3' placeholder='Email' />
               </div>
             </div>
-            <div className='form-row'>
-              <div className='form-notice'>
+            <div className='form-group'>
+              <label for='inputEmail3' className='col-sm-2 control-label'>密码</label>
+              <div className='col-sm-10'>
+                <input ref='passwordEl' type='password' className='form-control' id='inputEmail3' placeholder='Email' />
+              </div>
+            </div>
+            <div className='form-group'>
+              <div className='col-sm-offset-2 col-sm-10'>
+                <button 
+                  className='btn btn-default' 
+                  onClick={this.login.bind(this)} 
+                  type='submit' >
+                  登陆
+                </button>
+              </div>
+            </div>
+            <div className='form-group'>
+              <div className='col-sm-offset-2 col-sm-10'>
                 <span>{this.state.notice}</span>
               </div>
             </div>

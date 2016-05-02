@@ -1,0 +1,126 @@
+.editor-aside{
+    position: fixed;
+    top:60px;
+    left:0;
+    bottom:0;
+    width:200px;
+    z-index:99;
+    overflow-y:scroll;
+    border-right:1px solid #ccc;
+    .editor-aside-item{
+        display:block;
+        padding:10px;
+        line-height:20px;
+        text-align:center;
+        color:#333;
+        font-size:14px;
+        border-bottom:1px solid #f2f2f2;
+        &:hover{
+            background-color:#ddd;
+        }
+        &:active{
+            background-color:#aaa;
+        }
+    }
+    .editor-aside-button{
+        font-size:12px;
+        font-style: italic;
+        color:#23527c;
+        &:hover{
+            color:darken(#23527c,5%);
+        }
+    }
+}
+
+.editor-area{
+    margin-left:220px;
+    background-color: #f3f3f3;
+    padding:10px;
+    overflow: hidden;
+    
+    .editor-tags-wrapper{
+        position:relative;
+        height:20px;
+        line-height:20px; 
+    }
+    .editor-tag-select-panel{
+        position: absolute;
+        padding:6px;
+        top:32px;
+        left:0;
+        z-index:1;
+        background-color:#fff;
+        border:1px solid #ccc;
+        .editor-tags-item{
+            cursor:pointer
+        }
+    }
+    .editor-row{
+        margin-top:10px;
+        display:block;
+        background-color:#fff;  
+        padding:6px 12px;
+        font-size:14px;
+        &:first-child{
+            margin-top:0;
+        }
+    }
+    .editor-tags-item{
+        display: inline-block;
+        padding: 0 8px;
+        color: #017e66;
+        background-color: #e7f2ed;
+        height: 20px;
+        line-height: 20px;
+        font-weight: 400;
+        font-size: 13px;
+        text-align: center;
+        margin-right: .5rem;
+    }
+    .editor-panel-wrapper{
+        display:flex;
+    }
+    .editor-panel{
+        display:block;
+        align-self:stretch;
+        flex:1;
+        font-size:14px;
+        color:#333;
+        margin-left:20px;
+        &:first-child{
+            margin-left:0
+        }
+    }
+    .editor-content{
+        display:block;
+        width: 100%;
+        height:400px;
+        padding:10px;
+        font-size:14px;
+        color:#666;
+        outline:0;
+        border:1px solid #ccc;
+        box-sizing:border-box;
+        background-color: white;
+        overflow-y: scroll;
+    }
+    .editor-markdown{
+        display:block;
+        height:400px;
+        padding:10px;
+        font-size:14px;
+        color:#666;
+        overflow-y: scroll;
+        border:1px solid #ccc;
+        background-color: white;
+        box-sizing:border-box;
+        img{
+            width:100%;
+            height:auto;
+        }
+        pre{
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    }
+}

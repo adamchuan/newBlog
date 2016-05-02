@@ -1,0 +1,21 @@
+.i-close{
+    display:inline-block;
+    width:10px;
+    height:10px; 
+    vertical-align:middle;
+    margin-left:4px;
+    cursor: pointer;
+    &:first-child{
+        margin-left:0;
+    }
+    path{
+        stroke: rgb(99,99,99);
+        stroke-width:10;
+        fill: rgba(0,0,0,0);
+    }
+}
+
+.icon-load{
+    width: 30px;
+    height: 30px;
+}

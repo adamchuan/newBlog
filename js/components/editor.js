@@ -3,45 +3,15 @@ import marked from 'marked'
 import {highlightAuto} from 'highlight.js'
 import { connect } from 'react-redux'
 import DialogLoad from './dialogLoad.js'
-import { requestPostIfNeeded, changePost } from '../actions'
-import {Link} from 'react-router'
+import { requestPost, changePost, savePost, deletePost, createPost } from '../actions'
+import {Link, RouteContext} from 'react-router'
+import reactMixin from 'react-mixin'
 
 marked.setOptions({
   highlight: (code) => {
     return highlightAuto(code).value
   }
 })
-
-class PostTag extends React.Component {
-  render () {
-    const {name, onDelete} = this.props
-
-    return (
-      <div className='editor-tags-item'>
-        {name}
-        <svg
-          className='i-close'
-          onClick={onDelete}
-          viewBox='0 0 40 40'>
-          <path d='M0,0L40,40ZM40,0L0,40Z'/>
-        </svg>
-      </div>
-    )
-  }
-}
-
-class Tag extends React.Component {
-
-  render () {
-    const {name, onAdd} = this.props
-
-    return (
-      <div className='editor-tags-item' onClick={onAdd}>
-        {name}
-      </div>
-    )
-  }
-}
 
 class TagsPanel extends React.Component {
 
@@ -50,10 +20,17 @@ class TagsPanel extends React.Component {
     this.state = {
       showPannel: false
     }
+
+    /*
+    为了不影响react的事件系统 需要一个单独的变量来表示，
+    点击是否是在tagspanel的区域触发，通过判断这个变量来
+    是否关闭添加面板
+     */
+    this.isClickOnPanel = false
   }
 
   componentDidMount () {
-    this.refs.etwEl.addEventListener('click', this.handlerShowPanel.bind(this))
+    this.refs.editorTagsWrapperEl.addEventListener('click', this.handlerShowPanel.bind(this))
     document.body.addEventListener('click', this.handlerRemovePanel.bind(this))
   }
 
@@ -72,53 +49,67 @@ class TagsPanel extends React.Component {
   addPostTag (postTag) {
     const newPostTags = this.props.postTags
     const { changeTags } = this.props
-
-    if (newPostTags.indexOf(postTag === -1)) {
+    if (newPostTags.indexOf(postTag) === -1) {
       newPostTags.push(postTag)
       changeTags(newPostTags)
     }
   }
 
   handlerShowPanel (e) {
-    e.stopPropagation()
-    this.setState({
-      showPannel: true
-    })
+    this.isClickOnPanel = true
+    if (!this.state.showPannel) {
+      this.setState({
+        showPannel: true
+      })
+    }
   }
 
   handlerRemovePanel (e) {
-    this.setState({
-      showPannel: false
-    })
+    if (this.state.showPannel && !this.isClickOnPanel) {
+      this.setState({
+        showPannel: false
+      })
+    }
+    this.isClickOnPanel = false
   }
 
   render () {
     const {tags, postTags} = this.props
     const {showPannel} = this.state
     return (
-      <div ref='etwEl' className='editor-tags-wrapper' onClick={this.handlerShowPanel.bind(this)}>
-        {postTags.map((postTag) => {
-          return <PostTag
-            key={postTag}
-            name={tags[postTag].name}
-            onDelete={() => {
-              this.deletePostTag(postTag)
-            }}
-          />
-        })}
-        {showPannel
-        ? <div className='editor-tag-select-panel'>
-          {tags.map((tag) => {
-            return <Tag
-              key={tag.index}
-              name={tag.name}
-              onAdd={() => {
-                this.addPostTag(tag)
+      <div ref='editorTagsWrapperEl' className='editor-tags-wrapper' >
+        {postTags.map((postTag, index) => {
+          return <div key={index} className='editor-tags-item'>
+            <span className='word-mid'>
+              {tags[postTag].name}
+            </span>
+            <svg
+              className='i-close'
+              onClick={() => {
+                this.deletePostTag(postTag)
               }}
-            />
+              viewBox='0 0 40 40'>
+              <path d='M0,0L40,40ZM40,0L0,40Z'/>
+            </svg>
+          </div>
+        })}
+        <div
+          style={{
+            'display': showPannel ? 'block' : 'none'
+          }}
+          className='editor-tag-select-panel'
+        >
+          {tags.map((tag) => {
+            return <span
+              className='editor-tags-item'
+              key={tag.index}
+              onClick={() => {
+                this.addPostTag(tag.index)
+              }}>
+              {tag.name}
+            </span>
           })}
         </div>
-        : ''}
       </div>
     )
   }
@@ -126,15 +117,18 @@ class TagsPanel extends React.Component {
 
 class EditorAside extends React.Component {
 
-  createArticle () {
-
+  createPost () {
+    const {dispatch} = this.props
+    dispatch(createPost({
+      title: '新建文章'
+    }))
   }
 
   render () {
     return (
       <aside className='editor-aside'>
-        <div className='editor-aside-item' onClick={this.createArticle.bind(this)}>
-          <button>
+        <div className='editor-aside-item' onClick={this.createPost.bind(this)}>
+          <button className='btn btn-default'>
               创建新文章
           </button>
         </div>
@@ -162,6 +156,8 @@ class Editor extends React.Component {
   constructor (props, context) {
     super(props, context)
     this.inputTime = new Date().getTime()
+    /* 是否被保存了 */
+    this.isSaved = true
   }
 
   componentWillReceiveProps (nextProps) {
@@ -169,8 +165,15 @@ class Editor extends React.Component {
       const { dispatch } = this.props
       const postid = nextProps.params.postid
       this.id = postid
-      dispatch(requestPostIfNeeded(postid))
+      dispatch(requestPost(postid))
     }
+  }
+
+  routerWillLeave (nextLocation) {
+    if (!this.state.isSaved) {
+      return '文章还未保存，是否要离开'
+    }
+    return false
   }
 
   changeContent (e) {
@@ -183,6 +186,7 @@ class Editor extends React.Component {
       }))
       this.inputTime = nowTime
     }
+    this.isSaved = false
   }
 
   changeTitle (e) {
@@ -190,6 +194,7 @@ class Editor extends React.Component {
     dispatch(changePost({
       title: e.target.value
     }))
+    this.isSaved = false
   }
 
   changeSummary (e) {
@@ -197,6 +202,7 @@ class Editor extends React.Component {
     dispatch(changePost({
       summary: e.target.value
     }))
+    this.isSaved = false
   }
 
   changeTags (newPostTags) {
@@ -204,10 +210,23 @@ class Editor extends React.Component {
     dispatch(changePost({
       tags: newPostTags
     }))
+    this.isSaved = false
+  }
+
+  savePost () {
+    const { dispatch } = this.props
+    dispatch(savePost())
+    this.isSaved = true
+  }
+
+  deletePost () {
+    const { dispatch } = this.props
+    dispatch(deletePost())
+    this.isSaved = true
   }
 
   render () {
-    const {posts} = this.props
+    const {posts, dispatch} = this.props
     const {title, summary, tags, content, isLoad, isFetching} = this.props.post
     const markedContent = marked(content)
 
@@ -219,34 +238,36 @@ class Editor extends React.Component {
     return (
       <div className='editor-area'>
         {isFetching ? <DialogLoad /> : ''}
-        <EditorAside posts={posts} />
+        <EditorAside posts={posts} dispatch={dispatch} />
         {isLoad
         ? <div className='editor-wrapper'>
-          <div className='editor-row'>
-            <input
-              className='editor-title'
-              type='text'
+           <div className='form-group'>
+             <label>博文标题</label>
+             <input 
+              type='text' 
+              className='form-control' 
               defaultValue={title}
               placeholder='博文标题'
-              onChange={changeTitle}
-             />
-          </div>
-          <div className='editor-row'>
-            <textarea
-              className='editor-summary'
+              onBlur={changeTitle} />
+           </div>
+           <div className='form-group'>
+             <label>博文标题</label>
+             <textarea 
+              type='text' 
+              rows="3"
+              className='form-control' 
               defaultValue={summary}
               placeholder='博文概要'
-              onChange={changeSummary}
-            />
-          </div>
-          <div className='editor-row'>
+              onBlur={changeSummary} />
+           </div>
+          <div className='form-group editor-row'>
             <TagsPanel
               tags={this.props.tags}
               postTags={tags}
               changeTags={changeTags}
             />
           </div>
-          <div className='editor-panel-wrapper'>
+          <div className='form-group editor-panel-wrapper'>
             <div className='editor-panel'>
               <textarea
                 className='editor-content'
@@ -261,17 +282,30 @@ class Editor extends React.Component {
               </div>
             </div>
           </div>
+          <div className='form-group'>
+            <button 
+              className='btn btn-success' 
+              onClick={this.savePost.bind(this)}>
+                保存文章
+            </button>
+            <button 
+              className='btn btn-danger' 
+              onClick={this.deletePost.bind(this)}>
+                删除文章
+            </button>
+           </div>
         </div>
-        : ''
+        : null
         }
       </div>
     )
   }
 }
 
+// reactMixin.onClass(Editor, RouteContext)
+
 export default connect((state) => {
   const {post, tags} = state
-
   return Object.assign({
     tags,
     post,

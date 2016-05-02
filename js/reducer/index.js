@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
-
 function tags (state = [], action) {
   let nextstate
   switch (action.type) {
@@ -15,16 +14,34 @@ function tags (state = [], action) {
 
 function posts (state = {
   isFetching: false,
-  selectPostId: null,
   posts: []
 }, action) {
   switch (action.type) {
     case 'INIT_POSTS':
-      state.posts = action.data
+      state = Object.assign({}, state, {
+        posts: action.posts,
+        isFetching: false
+      })
       break
-    case 'SELECT_POST':
-      state.selectPostId = action.selectPostId
-
+    case 'ADD_POST':
+      state.posts.push(action.post)
+      break
+    case 'REMOVE_POST':
+      let index = state.posts.findIndex((item) => {
+        return item.id === action.postid
+      })
+      if (index > -1) {
+        state.posts.splice(index, 1)
+      }
+      break
+    case 'UPDATE_POST':
+      let post = state.posts.find((item) => {
+        return item.id === action.postid
+      })
+      if (post) {
+        Object.assign(post, action.data)
+      }
+      break
   }
   return state
 }
@@ -39,6 +56,34 @@ function post (state = {
   tags: []
 }, action) {
   switch (action.type) {
+    case 'CREATE_POST':
+      state = Object.assign({
+        title: '',
+        summary: '',
+        content: '',
+        id: '',
+        tags: []
+      }, action.post, {
+        isFetching: true,
+        isLoad: false
+      })
+      break
+    case 'CREATE_POST_SUCCESS':
+      state = Object.assign({}, state, {
+        isFetching: false,
+        isLoad: false
+      })
+      break
+    case 'CREATE_POST_FAIL':
+      state = Object.assign({}, state, {
+        isFetching: false,
+        isLoad: false,
+        title: '',
+        summary: '',
+        content: '',
+        tags: []
+      })
+      break
     case 'REQUEST_POST':
       state = Object.assign({}, state, {
         isFetching: true,
@@ -60,6 +105,38 @@ function post (state = {
         summary: '',
         content: '',
         tags: []
+      })
+      break
+    case 'SAVE_POST':
+      state = Object.assign({}, state, {
+        isFetching: true
+      })
+      break
+    case 'SAVE_POST_SUCCESS':
+      state = Object.assign({}, state, {
+        isFetching: false
+      })
+      break
+    case 'SAVE_POST_FAIL':
+      state = Object.assign({}, state, {
+        isFetching: false
+      })
+      break
+    case 'DELETE_POST':
+      state = Object.assign({}, state, {
+        isFetching: true,
+        isLoad: false
+      })
+      break
+    case 'DELETE_POST_SUCCESS':
+      state = Object.assign({}, state, {
+        isFetching: false,
+        isLoad: false
+      })
+      break
+    case 'DELETE_POST_FAIL':
+      state = Object.assign({}, state, {
+        isFetching: false
       })
       break
     case 'CHANGE_POST':

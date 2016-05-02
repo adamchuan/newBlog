@@ -11,9 +11,11 @@ class Post extends Component {
         <section className='post-wrap'>
           <header className='post-header-wrap'>
             <h2 className='post-title'>{title}</h2>
-            <small><time className='post-time'> <i className='icon-calendar'></i> <span>{date}</span> </time></small>
           </header>
           <div className='post-content' dangerouslySetInnerHTML={{__html: summary}}></div>
+          <div className='post-meta'>
+            Posted by AdamChuan on {date}
+          </div>
         </section>
       </Link>
     )

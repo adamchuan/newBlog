@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 class DialogLoad extends React.Component {
   render () {
     return (
