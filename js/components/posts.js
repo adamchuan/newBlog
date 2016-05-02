@@ -5,9 +5,10 @@ import { connect } from 'react-redux'
 class Post extends Component {
 
   render () {
-    let {title, date, summary, id} = this.props.post
+    const {title, date, summary, id} = this.props.post
+    const {index} = this.props
     return (
-      <Link to={`post/${id}`}>
+      <Link to={`post/${id}/${index}`}>
         <section className='post-wrap'>
           <header className='post-header-wrap'>
             <h2 className='post-title'>{title}</h2>
@@ -29,8 +30,14 @@ class Posts extends Component {
     return (
       <div className='pageWrap'>
         <div className='posts-container'>
-          {posts.map((post) => {
-            return <Post key={post.id} tags={tags} post={post} dispatch={dispatch} />
+          {posts.map((post, index) => {
+            return <Post 
+              key={post.id} 
+              tags={tags} 
+              post={post}
+              index={index}
+              dispatch={dispatch} 
+            />
           })}
         </div>
       </div>

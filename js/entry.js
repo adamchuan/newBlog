@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <Router history={history}>
             <Route path='/' component={Nav}>
               <IndexRoute component={Posts} />
-              <Route path='/post/:postid' component={Post} />
+              <Route path='/post/:postid/:index' component={Post} />
               <Route path='/login' components={Login} />
               <Route path='/manage' component={Manage} onEnter={requireAuth} >
                 <IndexRoute component={Editor} />
