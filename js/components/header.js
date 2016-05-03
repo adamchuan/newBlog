@@ -11,7 +11,7 @@ class Header extends Component {
             Adam Blog
           </div>
           <nav className='nav-wrapper'>
-            <ul>
+            <ul className='list-inline'>
               <li>
                 <IndexLink to='/'>
                   POSTS

@@ -34,15 +34,16 @@ class Post extends Component {
 
   componentDidUpdate () {
     window.scrollTo(0, 0)
-  }
-
-  compoentDidMount (){
-
-    let el = document.createElement('div')
-    el.setAttribute('data-thread-key', this.id)
-    el.setAttribute('data-url', window.location.toString())
-    window.DUOSHUO.EmbedThread(el)
-    this.refs.commentEl.appendChild(el)
+    if (this.refs.commentEl) {
+      let el = document.createElement('div')
+      el.setAttribute('data-thread-key', this.id)
+      el.setAttribute('data-title', this.props.title)
+      el.setAttribute('data-url', window.location.toString())
+      window.DUOSHUO.EmbedThread(el)
+      this.refs.commentEl.appendChild(el)
+      console.log(this.refs)
+      console.log(el)
+    }
   }
 
   render () {

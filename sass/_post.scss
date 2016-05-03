@@ -11,13 +11,13 @@
     line-height: 1.3;
     font-weight: normal;
     transition:color 0.5s;
-
 }
 .post-content{
     color:rgb(163, 163, 163);
     font-style:italic;
     line-height: 24px;
     font-size:14px;
+    transition:color 0.5s;
 }
 .post-meta{
     margin-bottom:30px;
@@ -29,7 +29,10 @@
     color:#404040;
     border-bottom:1px dashed #d9d9d9;
     &:hover{
-        color:#0085a1
+        color:#0085a1;
+        .post-content{
+            color:#0085a1;
+        }
     }
 }
 
