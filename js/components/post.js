@@ -71,7 +71,7 @@ class Post extends Component {
         <article className='post-content' dangerouslySetInnerHTML={{__html: summary + markContent}}>
         </article>
         <div className='row'>
-          <div className='col-md-4 text-left text-overflow'>
+          <div className='col-md-4 col-md-offset-4 text-left text-overflow'>
             {preLinkIndex >= 0 
               ? <Link to={`post/${posts[preLinkIndex].id}/${preLinkIndex}`}>
                 上一篇：{posts[preLinkIndex].title}

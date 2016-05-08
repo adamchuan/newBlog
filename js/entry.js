@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { Router, Route, IndexRoute, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, hashHistory, applyRouterMiddleware } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { markdown } from 'markdown'
+import AV from 'avoscloud-sdk'
+import useScroll from 'react-router-scroll'
 import store from './store/configureStore'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -12,7 +14,7 @@ import Posts from './components/Posts'
 import Manage from './components/Manage'
 import Login from './components/Login'
 import Editor from './components/Editor'
-import AV from 'avoscloud-sdk'
+import About from './components/About'
 
 const history = syncHistoryWithStore(hashHistory, store)
 
@@ -50,9 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
       render(
         <Provider store={store}>
           <Router history={history}>
-            <Route path='/' component={Nav}>
+            <Route path='/' component={Nav} render={applyRouterMiddleware(useScroll())}>
               <IndexRoute component={Posts} />
               <Route path='/post/:postid/:index' component={Post} />
+              <Route path='/about' components={About} />
               <Route path='/login' components={Login} />
               <Route path='/manage' component={Manage} onEnter={requireAuth} >
                 <IndexRoute component={Editor} />

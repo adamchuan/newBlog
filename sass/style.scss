@@ -132,6 +132,15 @@ a:focus, a:hover{
     text-align: left;
 }
 
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.center-inline-block{
+    display: inline-block;
+    max-width:100%;
+}
 .dialog-wrapper{
     position: fixed;
     top:0;
@@ -169,3 +178,4 @@ a:focus, a:hover{
 @import "post.scss";
 @import "icon.scss";
 @import "editor.scss";
+@import "about.scss";
