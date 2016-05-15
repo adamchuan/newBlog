@@ -14,9 +14,10 @@ function actionCreatePostSuccess () {
   }
 }
 
-function actionCreatePostFail () {
+function actionCreatePostFail (error) {
   return {
-    type: 'CREATE_POST_FAIL'
+    type: 'CREATE_POST_FAIL',
+    error
   }
 }
 
@@ -39,9 +40,10 @@ function actionDeletePostSuccess () {
   }
 }
 
-function actionDeletePostFail () {
+function actionDeletePostFail (error) {
   return {
-    type: 'DELETE_POST_FAIL'
+    type: 'DELETE_POST_FAIL',
+    error
   }
 }
 
@@ -91,9 +93,10 @@ function actionSavePostSuccess () {
   }
 }
 
-function actionSavePostFail () {
+function actionSavePostFail (error) {
   return {
-    type: 'SAVE_POST_FAIL'
+    type: 'SAVE_POST_FAIL',
+    error
   }
 }
 
@@ -162,9 +165,8 @@ export function createPost (post) {
       dispatch(actionAddPost(post))
       dispatch(actionCreatePostSuccess())
       hashHistory.push(`editor/${data.id}`)
-    }, (err) => {
-      console.log(err)
-      dispatch(actionCreatePostFail())
+    }, (error) => {
+      dispatch(actionCreatePostFail(error))
     })
   }
 }
@@ -179,9 +181,8 @@ export function deletePost () {
       dispatch(actionRemovePost(postid))
       dispatch(actionDeletePostSuccess())
       hashHistory.push('manage')
-    }, (err) => {
-      console.log(err)
-      dispatch(actionDeletePostFail())
+    }, (error) => {
+      dispatch(actionDeletePostFail(error))
     })
   }
 }
@@ -202,9 +203,8 @@ export function requestPost (postid) {
               date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDay()}`
             }))
           })
-          .catch((err) => {
-            console.log(err)
-            dispatch(actionRequestPostFail())
+          .catch((error) => {
+            dispatch(actionRequestPostFail(error))
           })
       })
     }
@@ -221,7 +221,6 @@ export function savePost () {
       dispatch(actionUpdatePost(postid, state))
       dispatch(actionSavePostSuccess())
     }, (err) => {
-      console.log(err)
       dispatch(actionSavePostFail())
     })
   }

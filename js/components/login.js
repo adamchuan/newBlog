@@ -3,14 +3,12 @@ import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 import AV from 'avoscloud-sdk'
 import DialogLoad from './dialogLoad.js'
+import ErrorMessage from './errorMessage.js'
 
 class Login extends React.Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = {
-      loginNotice: ''
-    }
   }
 
   login () {
@@ -40,19 +38,14 @@ class Login extends React.Component {
           hashHistory.push('/manage')
         }
       } else {
-        throw new Error('login fasle')
+        return Promise.reject('login fail')
       }
-    }, (err) => {
-      this.setState({
-        notice: err.toString()
-      })
-
-      dispatch({
-        type: 'LOGIN_FAIL'
-      })
     })
-    .catch((e) => {
-      console.log(e)
+    .catch((error) => {
+        dispatch({
+          type: 'LOGIN_FAIL',
+          error: error.message || error
+        })
     })
   }
 
@@ -61,6 +54,7 @@ class Login extends React.Component {
     return isFetching
       ? <DialogLoad />
       : (<div className='center-wrapper'>
+        <ErrorMessage errorMessage={this.props.errorMessage} />
         <div className='center-inner'>
           <div className='form-wrapper form-horizontal'>
             <div className='form-group'>
@@ -85,11 +79,6 @@ class Login extends React.Component {
                 </button>
               </div>
             </div>
-            <div className='form-group'>
-              <div className='col-sm-offset-2 col-sm-10'>
-                <span>{this.state.notice}</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>)
@@ -98,9 +87,11 @@ class Login extends React.Component {
 
 Login.props = {
   login: React.PropTypes.func.isRequired,
-  notice: React.PropTypes.string.isRequired
+  errorMessage: React.PropTypes.string
 }
 
 export default connect((state) => {
-  return Object.assign({}, state.user)
+  return Object.assign({}, state.user, {
+    errorMessage: state.errorMessage
+  })
 })(Login)

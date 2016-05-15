@@ -12,6 +12,23 @@ function tags (state = [], action) {
   return nextstate
 }
 
+function errorMessage (state = [], action) {
+  let nextstate 
+  switch (action.type) {
+    case 'RESET_ERROR_MESSAGE':
+      nextstate = null
+      break
+    default:
+      if (action.error) {
+        nextstate = action.error.toString()
+      } else {
+        nextstate = null
+      }
+  }
+
+  return nextstate
+}
+
 function posts (state = {
   isFetching: false,
   posts: []
@@ -184,6 +201,7 @@ const rootReducer = combineReducers({
   post,
   tags,
   user,
+  errorMessage,
   routing: routerReducer
 })
 
